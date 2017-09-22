@@ -11,18 +11,29 @@ module.exports = class Tree {
             //Testa se a pessoa é homem, se for testa se tem esposa, se tiver, verifica se a esposa é a pessoa procurada
         } else if (person.gender === "male" && person.ismanof !== undefined && person.ismanof.name === name) {
             return person.ismanof;
-        } else {
+        }else if (person.gender === "female" && person.iswomanof !== undefined && person.iswomanof.name === name){
+            return person.iswomanof;
+        }   
+        else {
             //Itera sobre os filhos e chama a função de procura de forma recursiva em cada filho
-            return person.sons.find((son) => {
+            let resultado = undefined;
+            person.sons.find((son) => {
                 let result = this.search(name, son)
-                if (result !== undefined)
-                    return result;
+                if (result !== undefined){
+                    resultado = result;
+                    return true;
+                }
                 return false;
             })
+            return resultado;
         }
     }
     brothers(person) {
+    
         var father = person.father;
+        if(father === undefined){
+            return [];
+        }
         var sons = father.sons;
         const brother = [];
         sons.forEach(function (son) {
@@ -73,7 +84,7 @@ module.exports = class Tree {
         return person.father;
     }
     mother(person) {
-        return person.father;
+        return person.mother;
     }
     brotherinlaw(person) {
         if (person.gender === 'male') {

@@ -1,7 +1,5 @@
 const Person = require('../models/person');
 
-
-
 const king = new Person({
     name: 'King Shan',
     gender: 'male',
@@ -205,6 +203,11 @@ saayan.ismanof = mina;
 saayan.sons.push(misa);
 mina.iswomanof = saayan;
 mina.sons.push(misa);
+kriya.father = savya;
+kriya.mother = krpi;
+misa.father = saayan;
+misa.mother = mina;
+
 
 
 module.exports = king;
