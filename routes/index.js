@@ -15,8 +15,8 @@ router.get('/', function(req, res, next) {
 
 router.get('/family/brothers', function(req, res, next) {
   
-  var person = tree.search('Satya');
-  var brother = tree.children(person);
+  var person = tree.search('Satvy');
+  var brother = tree.maternaluncle(person);
   console.log(brother);
   res.render('index', { title: 'Teste' });
   //res.redirect('/');

@@ -11,15 +11,14 @@ module.exports = class Tree {
             //Testa se a pessoa é homem, se for testa se tem esposa, se tiver, verifica se a esposa é a pessoa procurada
         } else if (person.gender === "male" && person.ismanof !== undefined && person.ismanof.name === name) {
             return person.ismanof;
-        }else if (person.gender === "female" && person.iswomanof !== undefined && person.iswomanof.name === name){
+        } else if (person.gender === "female" && person.iswomanof !== undefined && person.iswomanof.name === name) {
             return person.iswomanof;
-        }   
-        else {
+        } else {
             //Itera sobre os filhos e chama a função de procura de forma recursiva em cada filho
             let resultado = undefined;
             person.sons.find((son) => {
                 let result = this.search(name, son)
-                if (result !== undefined){
+                if (result !== undefined) {
                     resultado = result;
                     return true;
                 }
@@ -29,9 +28,9 @@ module.exports = class Tree {
         }
     }
     brothers(person) {
-    
+
         var father = person.father;
-        if(father === undefined){
+        if (father === undefined) {
             return [];
         }
         var sons = father.sons;
@@ -45,7 +44,10 @@ module.exports = class Tree {
     }
     sisters(person) {
         var father = person.father;
-        var sons = father.sons;
+        var sons = [];
+        if (father != undefined) {
+             sons = father.sons;
+        }
         const sister = [];
         sons.forEach(function (son) {
             if (son.name != person.name && son.gender === 'female') {
@@ -89,31 +91,26 @@ module.exports = class Tree {
     brotherinlaw(person) {
         if (person.gender === 'male') {
             var spouse = person.ismanof;
-            var father = spouse.father;
-            var sonsfather = father.sons;
-            const brotherlaw = [];
-            sonsfather.forEach(function (son) {
-                if (son.name != spouse.name) {
-                    if (son.gender === 'male'){
-                        brotherlaw.push(son);
+            var brother = this.brothers(spouse);
+            var sisters = this.sisters(person);
+            if (sisters.length > 0) {
+                sisters.forEach(function (sis) {
+                    if (sis.iswomanof !== undefined) {
+                        brother.push(sis.iswomanof);
                     }
-                }
-            }, this);
-            return brotherlaw;
+                }, this);
+            }
+            return brother;
         } else {
             var spouse = person.iswomanof;
-            var father = spouse.father;
-            var sonsfather = father.sons;
-            const brotherlaw = [];
-            sonsfather.forEach(function (son) {
-                if (son.name != spouse.name) {
-                    if (son.gender === 'male'){
-                        brotherlaw.push(son);
-                    }
-                    
+            var brother = this.brothers(spouse);
+            var sisters = this.sisters(person);
+            sisters.forEach(function (sis) {
+                if (sis.iswomanof !== undefined) {
+                    brother.push(sis.iswomanof);
                 }
             }, this);
-            return brotherlaw;
+            return brother;
         }
 
     }
@@ -125,7 +122,7 @@ module.exports = class Tree {
             const brotherlaw = [];
             sonsfather.forEach(function (son) {
                 if (son.name != spouse.name) {
-                    if (son.gender === 'female'){
+                    if (son.gender === 'female') {
                         brotherlaw.push(son);
                     }
                 }
@@ -138,10 +135,10 @@ module.exports = class Tree {
             const brotherlaw = [];
             sonsfather.forEach(function (son) {
                 if (son.name != spouse.name) {
-                    if (son.gender === 'female'){
+                    if (son.gender === 'female') {
                         brotherlaw.push(son);
                     }
-                    
+
                 }
             }, this);
             return brotherlaw;
@@ -150,85 +147,83 @@ module.exports = class Tree {
     }
     paternaluncle(person) {
         var father = person.father;
-        var uncles = brothers(father);
-        var brotherlaw = brotherinlaw(father);
-        brotherlaw.forEach(function(brother){
-            uncles.push(brother);
-        },this);
+        var uncles = this.brothers(father);
+        var brotherlaw = this.brotherinlaw(father);
+        if (brotherlaw.length > 0) {
+            brotherlaw.forEach(function (brother) {
+                uncles.push(brother);
+            }, this);
+        }
         return uncles;
     }
     maternaluncle(person) {
         var mother = person.mother;
-        var uncles = brothers(mother);
-        var brotherlaw = brotherinlaw(mother);
-        brotherlaw.forEach(function(brother){
+        var uncles = this.brothers(mother);
+        var brotherlaw = this.brotherinlaw(mother);
+        if(brotherlaw.length > 0 ){
+        brotherlaw.forEach(function (brother) {
             uncles.push(brother);
-        },this);
+        }, this);
+    }
         return uncles;
     }
     paternalaunt(person) {
         var father = person.father;
         var aunts = sisters(father);
         var sisterlaw = sisterinlaw(father);
-        sisterlaw.forEach(function(sister){
+        sisterlaw.forEach(function (sister) {
             aunts.push(brother);
-        },this);
+        }, this);
         return aunts;
     }
     maternalaunt(person) {
         var mother = person.mother;
         var aunts = sisters(mother);
         var sisterlaw = sisterinlaw(mother);
-        sisterlaw.forEach(function(sister){
+        sisterlaw.forEach(function (sister) {
             aunts.push(sister);
-        },this);
+        }, this);
         return aunts;
     }
     cousins(person) {
         var father = person.father;
-        
-
-        var sonsfather =  father.sons;
+        var uncles = this.brothers(father);
+        var aunt = this.sisters(father);
+        uncles = uncles.concat(aunt);
         var siblings = [];
-        sonsfather.forEach(function (son) {
-            if (son.name != person.name) {
-                siblings.push(son);
-            }
+        uncles.forEach(function (sib) {
+            siblings = siblings.concat(sib.sons);
         }, this);
-
-
-        var cousinsarr = [];
-        siblings.forEach(function(sib){    
-            if(sib.sons !== undefined){
-                cousinsarr.push(sib.sons);
-            }          
-        })
-        return cousinsarr;
+        return siblings;
     }
-    granddaughter(person){
+    granddaughter(person) {
         var children = person.sons;
         var daughters = [];
         var grand = [];
-        children.forEach(function(son){
+        children.forEach(function (son) {
             var dau = son.sons;
-            dau.forEach(function(da){
-                grand.push(da);
-            },this);
-            
-        },this);
+            dau.forEach(function (da) {
+                if (da.gender === 'female') {
+                    grand.push(da);
+                }
+            }, this);
+        }, this);
         return grand;
     }
-    grandson(person){
+    grandson(person) {
         var children = person.sons;
-        var  sons = [];
+        var sons = [];
         var grand = [];
-        children.forEach(function(son){
+        children.forEach(function (son) {
             var so = son.sons;
-            so.forEach(function(kid){
-                grand.push(kid);
-            },this);
-            
-        },this);
+            so.forEach(function (kid) {
+                if (kid.gender === 'male') {
+                    grand.push(kid);
+                }
+
+            }, this);
+
+        }, this);
         return grand;
     }
 
