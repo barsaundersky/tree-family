@@ -5,7 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sassMiddleware = require('node-sass-middleware');
-var neo4j = require('neo4j-driver').v1;
+
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -30,8 +30,7 @@ app.use(sassMiddleware({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-var driver = neo4j.driver('bolt://localhost',neo4j.auth.basic('neo4j','neo'));
-var session = driver.session();
+
 
 app.use('/', index);
 app.use('/users', users);
