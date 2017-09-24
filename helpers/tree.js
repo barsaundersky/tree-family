@@ -46,7 +46,7 @@ module.exports = class Tree {
         var father = person.father;
         var sons = [];
         if (father != undefined) {
-             sons = father.sons;
+            sons = father.sons;
         }
         const sister = [];
         sons.forEach(function (son) {
@@ -105,11 +105,13 @@ module.exports = class Tree {
             var spouse = person.iswomanof;
             var brother = this.brothers(spouse);
             var sisters = this.sisters(person);
-            sisters.forEach(function (sis) {
-                if (sis.iswomanof !== undefined) {
-                    brother.push(sis.iswomanof);
-                }
-            }, this);
+            if(sisters.length > 0){
+                sisters.forEach(function (sis) {
+                    if (sis.iswomanof !== undefined) {
+                        brother.push(sis.iswomanof);
+                    }
+                }, this);
+            }
             return brother;
         }
 
@@ -117,36 +119,36 @@ module.exports = class Tree {
     sisterinlaw(person) {
         if (person.gender === 'male') {
             var spouse = person.ismanof;
-            var father = spouse.father;
-            var sonsfather = father.sons;
-            const brotherlaw = [];
-            sonsfather.forEach(function (son) {
-                if (son.name != spouse.name) {
-                    if (son.gender === 'female') {
-                        brotherlaw.push(son);
+            var sister = this.sisters(spouse);
+            var brother = this.brothers(person);
+            if(brother.length > 0){
+                brother.forEach(function(bro){
+                    if(bro.ismanof !== undefined){
+                        sister.push(bro.ismanof);
                     }
-                }
-            }, this);
-            return brotherlaw;
+                },this);
+            }
+            return sister;
         } else {
             var spouse = person.iswomanof;
-            var father = spouse.father;
-            var sonsfather = father.sons;
-            const brotherlaw = [];
-            sonsfather.forEach(function (son) {
-                if (son.name != spouse.name) {
-                    if (son.gender === 'female') {
-                        brotherlaw.push(son);
+            var sister = this.sisters(spouse);
+            var brother = this.brothers(person);
+            if(brother.length > 0){
+                brother.forEach(function (bro) {
+                    if (bro.ismanof !== undefined) {
+                        sister.push(bro.ismanof);
                     }
-
-                }
-            }, this);
-            return brotherlaw;
+                }, this);
+            }
+            return sister;
         }
 
     }
     paternaluncle(person) {
         var father = person.father;
+        if(father === undefined){
+            return;  
+        }
         var uncles = this.brothers(father);
         var brotherlaw = this.brotherinlaw(father);
         if (brotherlaw.length > 0) {
@@ -158,31 +160,44 @@ module.exports = class Tree {
     }
     maternaluncle(person) {
         var mother = person.mother;
+        if(mother === undefined){
+            return;  
+        }
         var uncles = this.brothers(mother);
         var brotherlaw = this.brotherinlaw(mother);
-        if(brotherlaw.length > 0 ){
-        brotherlaw.forEach(function (brother) {
-            uncles.push(brother);
-        }, this);
-    }
+        if (brotherlaw.length > 0) {
+            brotherlaw.forEach(function (brother) {
+                uncles.push(brother);
+            }, this);
+        }
         return uncles;
     }
     paternalaunt(person) {
         var father = person.father;
-        var aunts = sisters(father);
-        var sisterlaw = sisterinlaw(father);
-        sisterlaw.forEach(function (sister) {
-            aunts.push(brother);
-        }, this);
+        if(father === undefined){
+            return;  
+        }
+        var aunts = this.sisters(father);
+        var sisterlaw = this.sisterinlaw(father);
+        if (sisterlaw.length > 0) {
+            sisterlaw.forEach(function (sister) {
+                aunts.push(brother);
+            }, this);
+        }
         return aunts;
     }
     maternalaunt(person) {
         var mother = person.mother;
-        var aunts = sisters(mother);
-        var sisterlaw = sisterinlaw(mother);
-        sisterlaw.forEach(function (sister) {
-            aunts.push(sister);
-        }, this);
+        if(mother === undefined){
+            return;  
+        }
+        var aunts = this.sisters(mother);
+        var sisterlaw = this.sisterinlaw(mother);
+        if (sisterlaw.length > 0) {
+            sisterlaw.forEach(function (sister) {
+                aunts.push(sister);
+            }, this);
+        }
         return aunts;
     }
     cousins(person) {
