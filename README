@@ -1,0 +1,12 @@
+To execute this code:
+
+1) Install Node Js: https://nodejs.org/en/download/
+2) Access project folder
+3) Execute into prompt command: npm install
+3) Execute into prompt command: npm start
+4) Open your browser and go to: http://localhost:3000
+
+If you want to run the tests:
+3) Execute into prompt command: npm test
+
+Enjoy it!
