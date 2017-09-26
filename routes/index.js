@@ -65,7 +65,7 @@ router.get('/family/sisterinlaw/:person', function(req, res, next) {
     res.send("No Sister in Law");
   }
   else{
-    res.send(sisterinlaw);
+    res.send(sisterinlaw.join(', '));
   }
 });
 //Brother in Law Route
@@ -76,7 +76,7 @@ router.get('/family/brotherinlaw/:person', function(req, res, next) {
     res.send("No Brother in Law");
   }
   else{
-    res.send(brotherinlaw);
+    res.send(brotherinlaw.join(', '));
   }
 });
 //Cousins Route
@@ -120,7 +120,7 @@ router.get('/family/children/:person', function(req, res, next) {
     res.send("No Children");
   }
   else{
-    res.send(children);
+    res.send(children.join(', '));
   }
   
 });
@@ -132,7 +132,7 @@ router.get('/family/sons/:person', function(req, res, next) {
     res.send("No Sons");
   }
   else{
-    res.send(sons);
+    res.send(sons.join(', '));
   }
 });
 //Daughters Route
@@ -143,7 +143,7 @@ router.get('/family/daughters/:person', function(req, res, next) {
     res.send("No Daughters");
   }
   else{
-    res.send(daughters);
+    res.send(daughters.join(', '));
   }
   
 });
@@ -155,7 +155,7 @@ router.get('/family/brothers/:person', function(req, res, next) {
     res.send("No Brothers");
   }
   else{
-    res.send(brother);
+    res.send(brother.join(', '));
   }
 });
 //Sisters Route
@@ -166,7 +166,7 @@ router.get('/family/sisters/:person', function(req, res, next) {
     res.send("No Sisters");
   }
   else{
-    res.send(sisters);
+    res.send(sisters.join(', '));
   }
 });
 //Grand Daughters Route
@@ -177,7 +177,7 @@ router.get('/family/granddaughter/:person', function(req, res, next) {
     res.send("No Grand Daughters");
   }
   else{
-    res.send(granddaughters);
+    res.send(granddaughters.join(', '));
   }
 });
 //Grand Son Route
@@ -188,7 +188,7 @@ router.get('/family/grandson/:person', function(req, res, next) {
     res.send("No Grand Son");
   }
   else{
-    res.send(grandson);
+    res.send(grandson.join(', '));
   }
 });
 
