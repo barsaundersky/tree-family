@@ -1,20 +1,18 @@
+//Class of methods to search in the Family Tree
 module.exports = class Tree {
     constructor(king) {
         this.king = king;
     }
+    //When user put a name, this method returns the person
     search(name, personToTest) {
-        //Se personToTest não for informado ele pega o king
         let person = personToTest || this.king;
-        //Testa se a person atual tem o nome desejado
         if (person.name === name) {
             return person;
-            //Testa se a pessoa é homem, se for testa se tem esposa, se tiver, verifica se a esposa é a pessoa procurada
         } else if (person.gender === "male" && person.ismanof !== undefined && person.ismanof.name === name) {
             return person.ismanof;
         } else if (person.gender === "female" && person.iswomanof !== undefined && person.iswomanof.name === name) {
             return person.iswomanof;
         } else {
-            //Itera sobre os filhos e chama a função de procura de forma recursiva em cada filho
             let resultado = undefined;
             person.sons.find((son) => {
                 let result = this.search(name, son)
@@ -27,6 +25,23 @@ module.exports = class Tree {
             return resultado;
         }
     }
+    //Recover all names of family tree
+    findAllNames(personparam) {
+        let names = [];
+        const person = personparam || this.king;  
+        names.push(person.name);     
+        if (person.ismanof !== undefined) {
+          names.push(person.ismanof.name);
+        } else if (person.iswomanof !== undefined) {
+          names.push(person.iswomanof.name);
+        }       
+       let resultado = undefined;
+        person.sons.forEach(son => {
+          names= names.concat(this.findAllNames(son))
+        },this);
+        return names;
+      }
+    //Match brothers of the person
     brothers(person) {
         if(person !== undefined){
             var father = person.father;
@@ -47,6 +62,7 @@ module.exports = class Tree {
         }
         
     }
+    //Match sisters of the person
     sisters(person) {
         var father = person.father;
         var sons = [];
@@ -65,9 +81,11 @@ module.exports = class Tree {
 
         return sister;
     }
+    //Match children of the person
     children(person) {
         return person.sons;
     }
+    //Match sons of the person
     sons(person) {
         var children = person.sons;
         const son = [];
@@ -79,6 +97,7 @@ module.exports = class Tree {
 
         return son;
     }
+    //Match daughters of the person
     daughters(person) {
         var children = person.sons;
         const daughter = [];
@@ -90,12 +109,15 @@ module.exports = class Tree {
 
         return daughter;
     }
+    //Match father of the person
     father(person) {
         return person.father;
     }
+    //Match mother of the person
     mother(person) {
         return person.mother;
     }
+    //Match brotherinlaw of the person
     brotherinlaw(person) {
         if (person.gender === 'male') {
             var spouse = person.ismanof;
@@ -124,6 +146,7 @@ module.exports = class Tree {
         }
 
     }
+    //Match sisterinlaw of the person
     sisterinlaw(person) {
         if (person.gender === 'male') {
             var spouse = person.ismanof;
@@ -152,6 +175,7 @@ module.exports = class Tree {
         }
 
     }
+    //Match paternal uncle of the person
     paternaluncle(person) {
         var father = person.father;
         if(father === undefined){
@@ -166,6 +190,7 @@ module.exports = class Tree {
         }
         return uncles;
     }
+    //Match Maternal Uncle of the person
     maternaluncle(person) {
         var mother = person.mother;
         if(mother === undefined){
@@ -180,6 +205,7 @@ module.exports = class Tree {
         }
         return uncles;
     }
+    //Match Paternal Aunt of the person
     paternalaunt(person) {
         var father = person.father;
         if(father === undefined){
@@ -194,6 +220,7 @@ module.exports = class Tree {
         }
         return aunts;
     }
+    //Match Maternal Aunt of the person
     maternalaunt(person) {
         var mother = person.mother;
         if(mother === undefined){
@@ -208,6 +235,7 @@ module.exports = class Tree {
         }
         return aunts;
     }
+    //Match Cousins of the person
     cousins(person) {
         var father = person.father;
         if(father === undefined){
@@ -222,6 +250,7 @@ module.exports = class Tree {
         }, this);
         return siblings;
     }
+    //Match Grand Daugther of the person
     granddaughter(person) {
         var children = person.sons;
         var daughters = [];
@@ -236,6 +265,7 @@ module.exports = class Tree {
         }, this);
         return grand;
     }
+    //Match Grand Son of the person
     grandson(person) {
         var children = person.sons;
         var sons = [];

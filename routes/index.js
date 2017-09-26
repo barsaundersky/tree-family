@@ -6,167 +6,190 @@ const Tree =  require('../helpers/tree');
 const tree = new Tree(familytree);
 
 
-
+//Index Route
 router.get('/', function(req, res, next) {
-  
-  res.render('index', { title: 'Teste' });
-  
-  
-});
-router.get('/teste', function(req, res, next) {
-  
-  var person = tree.search('Chika');
-  var maternalaunt = tree.maternalaunt(person);
-  
- //res.render('index', { title: 'Teste' });
-  console.log(maternalaunt);
-  
+  var peoples = tree.findAllNames().sort();
+  res.render('index', { title: 'Family Tree', peoples: peoples}); 
 });
 
-router.get('/family/paternaluncle', function(req, res, next) {
-  var person = tree.search(req.query.person);
+//Paternal Uncle Route
+router.get('/family/paternaluncle/:person', function(req, res, next) {
+  var person = tree.search(req.params.person);
   var paternaluncle = tree.paternaluncle(person);
+  if(paternaluncle.length == 0){
+    res.send("No Paternal Uncle");
+  }
+  else{
+    res.send(paternaluncle.join(', '));
+  }
   
-
-  res.send(paternaluncle);
-  //res.render('index', { title: 'Teste' });
-
 });
-router.get('/family/maternaluncle', function(req, res, next) {
-  var person = tree.search(req.query.person);
+//Maternal Uncle Route
+router.get('/family/maternaluncle/:person', function(req, res, next) {
+  var person = tree.search(req.params.person);
   var maternaluncle = tree.maternaluncle(person);
-  
-
-  res.send(maternaluncle);
-  //res.render('index', { title: 'Teste' });
-
+  if(maternaluncle.length == 0){
+    res.send("No Maternal Uncle");
+  }
+  else{
+    res.send(maternaluncle.join(', '));
+  }
 });
-router.get('/family/paternalaunt', function(req, res, next) {
-  var person = tree.search(req.query.person);
+//Paternal Aunt Route
+router.get('/family/paternalaunt/:person', function(req, res, next) {
+  var person = tree.search(req.params.person);
   var paternalaunt = tree.paternalaunt(person);
-  
-
-  res.send(paternalaunt);
-  //res.render('index', { title: 'Teste' });
-
+  if(paternalaunt.length == 0){
+    res.send("No Paternal Aunt");
+  }
+  else{
+    res.send(paternalaunt.join(', '));
+  }
 });
-router.get('/family/maternalaunt', function(req, res, next) {
-  var person = tree.search(req.query.person);
+//Maternal Aunt Route
+router.get('/family/maternalaunt/:person', function(req, res, next) {
+  var person = tree.search(req.params.person);
   var maternalaunt = tree.maternalaunt(person);
-  
-
-  res.send(maternalaunt);
-  //res.render('index', { title: 'Teste' });
-
+  if(maternalaunt.length == 0){
+    res.send("No Maternal Aunt");
+  }
+  else{
+    res.send(maternalaunt.join(', '));
+  }
 });
-
-router.get('/family/sisterinlaw', function(req, res, next) {
-  var person = tree.search(req.query.person);
+//Sister in Law Route
+router.get('/family/sisterinlaw/:person', function(req, res, next) {
+  var person = tree.search(req.params.person);
   var sisterinlaw = tree.sisterinlaw(person);
-  
-
-  res.send(sisterinlaw);
-  //res.render('index', { title: 'Teste' });
-
+  if(sisterinlaw.length == 0){
+    res.send("No Sister in Law");
+  }
+  else{
+    res.send(sisterinlaw);
+  }
 });
-router.get('/family/brotherinlaw', function(req, res, next) {
-  var person = tree.search(req.query.person);
+//Brother in Law Route
+router.get('/family/brotherinlaw/:person', function(req, res, next) {
+  var person = tree.search(req.params.person);
   var brotherinlaw = tree.brotherinlaw(person);
-  
-
-  res.send(brotherinlaw);
-  //res.render('index', { title: 'Teste' });
-
+  if(brotherinlaw.length == 0){
+    res.send("No Brother in Law");
+  }
+  else{
+    res.send(brotherinlaw);
+  }
 });
-router.get('/family/cousins', function(req, res, next) {
-  var person = tree.search(req.query.person);
+//Cousins Route
+router.get('/family/cousins/:person', function(req, res, next) {
+  var person = tree.search(req.params.person);
   var cousins = tree.cousins(person);
-  
-
-  res.send(cousins);
-  //res.render('index', { title: 'Teste' });
-
+  if(cousins.length == 0){
+    res.send("No Cousins");
+  }
+  else{
+    res.send(cousins.join(', '));
+  }
 });
-router.get('/family/father', function(req, res, next) {
-  var person = tree.search(req.query.person);
-  var father = tree.father(person);
-  
-
-  res.send(father);
-  //res.render('index', { title: 'Teste' });
-
+//Father Route
+router.get('/family/father/:person', function(req, res, next) {
+  var person = tree.search(req.params.person);
+  var father = tree.father(person); 
+  if(father ===undefined){
+    res.send("No Father");
+  }
+  else{
+    res.send(father.name);
+  }
 });
-router.get('/family/mother', function(req, res, next) {
-  var person = tree.search(req.query.person);
+//Mother Route
+router.get('/family/mother/:person', function(req, res, next) {
+  var person = tree.search(req.params.person);
   var mother = tree.mother(person);
-  
-
-  res.send(mother);
-  //res.render('index', { title: 'Teste' });
-
+  if(mother ===undefined){
+    res.send("No Mother");
+  }
+  else{
+    res.send(mother.name);
+  }
 });
-router.get('/family/children', function(req, res, next) {
-  var person = tree.search(req.query.person);
+//Children Route
+router.get('/family/children/:person', function(req, res, next) {
+  var person = tree.search(req.params.person);
   var children = tree.children(person);
+  if(children.length == 0){
+    res.send("No Children");
+  }
+  else{
+    res.send(children);
+  }
   
-
-  res.send(children);
-  //res.render('index', { title: 'Teste' });
-
 });
-
-router.get('/family/sons', function(req, res, next) {
-  var person = tree.search(req.query.person);
+//Sons Route
+router.get('/family/sons/:person', function(req, res, next) {
+  var person = tree.search(req.params.person);
   var sons = tree.sons(person);
-  
-
-  res.send(sons);
-  //res.render('index', { title: 'Teste' });
-
+  if(sons.length == 0){
+    res.send("No Sons");
+  }
+  else{
+    res.send(sons);
+  }
 });
-router.get('/family/daughters', function(req, res, next) {
-  var person = tree.search(req.query.person);
+//Daughters Route
+router.get('/family/daughters/:person', function(req, res, next) {
+  var person = tree.search(req.params.person);
   var daughters = tree.daughters(person);
+  if(daughters.length == 0){
+    res.send("No Daughters");
+  }
+  else{
+    res.send(daughters);
+  }
   
-
-  res.send(daughters);
-  //res.render('index', { title: 'Teste' });
-
 });
-router.get('/family/brothers', function(req, res, next) {
-  var person = tree.search(req.query.person);
+//Brohters Route
+router.get('/family/brothers/:person', function(req, res, next) {
+  var person = tree.search(req.params.person);
   var brother = tree.brothers(person);
-  
-
-  res.send(brother);
-  //res.render('index', { title: 'Teste' });
-
+  if(brother.length == 0){
+    res.send("No Brothers");
+  }
+  else{
+    res.send(brother);
+  }
 });
-router.get('/family/sisters', function(req, res, next) {
-  var person = tree.search(req.query.person);
+//Sisters Route
+router.get('/family/sisters/:person', function(req, res, next) {
+  var person = tree.search(req.params.person);
   var sisters = tree.sisters(person);
-  
-  res.send(sisters);
-  //res.render('index', { title: 'Teste' });
-
+  if(sisters.length == 0){
+    res.send("No Sisters");
+  }
+  else{
+    res.send(sisters);
+  }
 });
-router.get('/family/granddaughter', function(req, res, next) {
-  var person = tree.search(req.query.person);
+//Grand Daughters Route
+router.get('/family/granddaughter/:person', function(req, res, next) {
+  var person = tree.search(req.params.person);
   var granddaughters = tree.granddaughter(person);
-  
-
-  res.send(granddaughters);
-  //res.render('index', { title: 'Teste' });
-
+  if(granddaughters.length == 0){
+    res.send("No Grand Daughters");
+  }
+  else{
+    res.send(granddaughters);
+  }
 });
-router.get('/family/grandson', function(req, res, next) {
-  var person = tree.search(req.query.person);
+//Grand Son Route
+router.get('/family/grandson/:person', function(req, res, next) {
+  var person = tree.search(req.params.person);
   var grandson = tree.grandson(person);
-  
-
-  res.send(grandson);
-  //res.render('index', { title: 'Teste' });
-
+  if(grandson.length == 0){
+    res.send("No Grand Son");
+  }
+  else{
+    res.send(grandson);
+  }
 });
 
 module.exports = router;

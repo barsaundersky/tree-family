@@ -8,5 +8,8 @@ module.exports = class Person{
       this.iswomanof = person.iswomanof;
       this.ismanof = person.ismanof;  
     }
+    toString(){
+       return this.name;
+    }
     
 }

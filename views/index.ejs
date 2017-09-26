@@ -5,7 +5,63 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
+
+      
+  <!-- Home Page Family Tree-->
     <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+
+    <h4>Select the person and the relation to show the result</h4>
+    
+    <form id="form" action="javascript:void(0)" method="POST">
+
+    <select id="peopleselector">          
+      
+            <% for(var i=0;i<peoples.length;i++){ %>
+            <option  value="<%= peoples[i] %>"><%= peoples[i] %></option>
+            <% } %>
+       
+    </select>
+
+
+
+    <select id="relationselector">
+      
+      <option value="sons">Sons</option>
+      <option value="daughters">Daughters</option>
+      <option value="father">Father</option>
+      <option value="mother">Mother</option>
+      <option value="children">Children</option>
+      <option value="brothers">Brothers</option>
+      <option value="sisters">Sisters</option>
+      <option value="granddaughter">Grand Daughter</option>
+      <option value="grandson">Grand Son</option>
+      <option value="cousins">Cousins</option>
+      <option value="brotherinlaw">Brothers-in-law</option>
+      <option value="sisterinlaw">Sister-in-law</option>
+      <option value="paternaluncle">Paternal Uncle</option>
+      <option value="maternaluncle">Maternal Uncle</option>
+      <option value="paternalaunt">Paternal Aunt</option>
+      <option value="maternalaunt">Maternal Aunt</option>
+      
+      </select>
+
+    <button type="submit">Search</button>
+    </form>
+    
+    <script type="text/javascript">
+    var form = document.getElementById("form");
+    form.onsubmit = function(event){
+      event.preventDefault();
+      var peopleEl= document.getElementById("peopleselector");
+      var relationEl = document.getElementById("relationselector");
+      var people = peopleEl.options[peopleEl.selectedIndex].value;
+      var relation = relationEl.options[relationEl.selectedIndex].value;
+      var url = encodeURI("/family/"+relation+"/"+people);
+      window.open(url);
+
+    }
+    
+    </script>
+      
   </body>
 </html>

@@ -1,3 +1,5 @@
+/* Test Class of Api */
+
 var expect    = require("chai").expect;
 var Tree = require("../helpers/tree");
 const familytree = require('../helpers/familytree');
